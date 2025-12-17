@@ -1,77 +1,241 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Load Shedding Interface</title>
+    <meta charset="UTF-8">
+    <title>LoadShedd | Grid Watch</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
     <style>
-        body { font-family: sans-serif; padding: 20px; }
-        .box { border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; border-radius: 5px; }
-        .stage-display { font-size: 2em; font-weight: bold; color: red; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        th { background-color: #f2f2f2; }
-    </style>
-    <script>
-        async function loadTowns() {
-            const province = document.getElementById("province").value;
-            const townSelect = document.getElementById("town");
-            townSelect.innerHTML = "<option>Loading...</option>";
+        /* Modern Dark Theme Base */
+        body { background-color: #121212; color: #e0e0e0; font-family: 'Segoe UI', sans-serif; }
 
-            if (!province) return;
+        /* Cards */
+        .card { background-color: #1e1e1e; border: 1px solid #333; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        .card-header { background-color: #252525; border-bottom: 1px solid #333; letter-spacing: 1px; }
 
-            try {
-                const response = await fetch('/towns/' + province);
-                const towns = await response.json();
-
-                townSelect.innerHTML = "";
-                towns.forEach(t => {
-                    // Places API returns objects {name: "...", province: "..."}
-                    const option = document.createElement("option");
-                    option.value = t.name;
-                    option.text = t.name;
-                    townSelect.appendChild(option);
-                });
-            } catch (e) {
-                townSelect.innerHTML = "<option>Error loading towns</option>";
-            }
+        /* Inputs */
+        .form-select, .form-control {
+            background-color: #2c2c2c; border: 1px solid #444; color: #fff;
+            padding: 12px; font-size: 1.1rem;
         }
-    </script>
+        .form-select:focus { background-color: #333; color: #fff; border-color: #0d6efd; box-shadow: 0 0 0 0.25rem rgba(13,110,253,.25); }
+
+        /* Buttons */
+        .btn-primary {
+            background-color: #0d6efd; border: none; padding: 12px;
+            font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .btn-primary:hover { background-color: #0b5ed7; }
+
+        /* Stage Badge - Make it Huge */
+        .stage-badge {
+            font-size: 3rem; font-weight: 800; padding: 15px 50px;
+            border-radius: 50px; display: inline-block;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        .stage-0 { background: linear-gradient(135deg, #198754, #20c997); color: white; }
+        .stage-high { background: linear-gradient(135deg, #dc3545, #fd7e14); color: white; animation: pulse 2s infinite; }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7); }
+            50% { transform: scale(1.02); box-shadow: 0 0 0 15px rgba(220, 53, 69, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
+        }
+
+        /* SCHEDULE SLOTS - HIGH VISIBILITY UPGRADE */
+        .day-header { color: #ffc107; margin-top: 30px; border-bottom: 1px solid #444; padding-bottom: 10px; }
+
+        .schedule-slot {
+            background-color: #e9ecef; /* Light Grey Background */
+            color: #212529;            /* Dark Black Text */
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 8px solid #dc3545; /* Red accent on left */
+            font-weight: 700;
+            font-size: 1.2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .slot-badge {
+            background-color: #212529;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+    </style>
 </head>
 <body>
 
-<h1>WTC Load Shedding System</h1>
+<nav class="navbar navbar-expand-lg navbar-dark bg-black py-3 shadow">
+    <div class="container">
+        <a class="navbar-brand fw-bold fs-3" href="#">
+            <i class="bi bi-lightning-charge-fill text-warning"></i> LoadShedd
+        </a>
+    </div>
+</nav>
 
-<div class="box">
-    Current Stage: <span class="stage-display" th:text="${stage}">?</span>
-</div>
+<div class="container mt-5">
 
-<div class="box">
-    <form method="post" action="/schedule">
-        <label>Province:</label>
-        <select id="province" name="province" onchange="loadTowns()">
-            <option value="">-- Select Province --</option>
-            <option th:each="p : ${provinces}" th:value="${p}" th:text="${p}"></option>
-        </select>
+    <div class="text-center mb-5">
+        <h5 class="text-secondary text-uppercase ls-2 mb-3">National Power Status</h5>
+        <div id="stageBadge" class="stage-badge stage-0 shadow-lg">
+            STAGE <span id="stageNumber" th:text="${stage}">0</span>
+        </div>
+    </div>
 
-        <label>Town:</label>
-        <select id="town" name="town">
-            <option value="">-- Select Province First --</option>
-        </select>
+    <div class="row g-5">
+        <div class="col-lg-4">
+            <div class="card h-100 border-0">
+                <div class="card-header fw-bold text-uppercase text-light">
+                    <i class="bi bi-geo-alt-fill me-2"></i> Find My Area
+                </div>
+                <div class="card-body p-4">
+                    <label class="text-muted mb-2 small text-uppercase fw-bold">Province</label>
+                    <select id="province" class="form-select mb-4" onchange="loadTowns()">
+                        <option value="">Select Province...</option>
+                        <option th:each="p : ${provinces}" th:value="${p}" th:text="${p}"></option>
+                    </select>
 
-        <button type="submit">Get Schedule</button>
-    </form>
-</div>
+                    <label class="text-muted mb-2 small text-uppercase fw-bold">Town / City</label>
+                    <select id="town" class="form-select mb-5" disabled>
+                        <option value="">Select Province First</option>
+                    </select>
 
-<div class="box" th:if="${schedule != null}">
-    <h2>Schedule for <span th:text="${selectedTown}">Town</span></h2>
+                    <button class="btn btn-primary w-100 shadow-lg" onclick="getSchedule()">
+                        View Schedule <i class="bi bi-arrow-right ms-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
 
-    <div th:each="day : ${schedule.days}">
-        <h3 th:text="${day.name}">Day</h3> <ul>
-        <li th:each="slot : ${day.slots}">
-            <span th:text="${slot.start}">Start</span> - <span th:text="${slot.end}">End</span>
-        </li>
-    </ul>
+        <div class="col-lg-8">
+            <div class="card border-0" style="min-height: 500px;">
+                <div class="card-header fw-bold text-uppercase text-light">
+                    <i class="bi bi-calendar3 me-2"></i> 4-Day Forecast
+                </div>
+                <div class="card-body p-4" id="scheduleResult">
+
+                    <div class="d-flex flex-column align-items-center justify-content-center h-100 text-muted opacity-50">
+                        <i class="bi bi-calendar-range" style="font-size: 5rem;"></i>
+                        <p class="mt-3 fs-5">Select a town to view outage times.</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
+<script>
+    async function loadTowns() {
+        const provinceSelect = document.getElementById("province");
+        const townSelect = document.getElementById("town");
+
+        // 1. Get the value
+        const province = provinceSelect.value;
+
+        // 2. Reset dropdown
+        townSelect.innerHTML = "<option>Loading...</option>";
+        townSelect.disabled = true;
+
+        if (!province) {
+            townSelect.innerHTML = "<option value=''>Select Province First</option>";
+            return;
+        }
+
+        try {
+            // 3. THE FIX: Add encodeURIComponent() to handle spaces (e.g. "Eastern Cape")
+            const response = await fetch(`/api/towns/${encodeURIComponent(province)}`);
+
+            if (!response.ok) throw new Error("Failed to load");
+
+            const towns = await response.json();
+
+            townSelect.innerHTML = "<option value=''>Select Town...</option>";
+            townSelect.disabled = false;
+
+            // 4. Sort Alphabetically
+            towns.sort((a,b) => a.name.localeCompare(b.name));
+
+            towns.forEach(t => {
+                const option = document.createElement("option");
+                option.value = t.name;
+                option.text = t.name;
+                townSelect.appendChild(option);
+            });
+        } catch (e) {
+            console.error(e);
+            townSelect.innerHTML = "<option>Error loading towns</option>";
+        }
+    }
+
+    async function getSchedule() {
+        const province = document.getElementById("province").value;
+        const town = document.getElementById("town").value;
+        const container = document.getElementById("scheduleResult");
+
+        if (!town) {
+            alert("Please select a town first.");
+            return;
+        }
+
+        container.innerHTML = `<div class="text-center mt-5"><div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status"></div></div>`;
+
+        try {
+            const response = await fetch(`/api/schedule/${province}/${encodeURIComponent(town)}`);
+            const data = await response.json();
+
+            let html = `<h2 class="text-white mb-4">${town}, ${province}</h2>`;
+
+            if (data.days && data.days.length > 0) {
+                data.days.forEach(day => {
+                    html += `<div class="day-header h5"><i class="bi bi-calendar-event me-2"></i> ${day.name}</div>`;
+
+                    if (day.slots && day.slots.length > 0) {
+                        day.slots.forEach(slot => {
+                            html += `<div class="schedule-slot shadow-sm">
+                                        <span><i class="bi bi-clock me-2"></i> ${slot.start}</span>
+                                        <span class="slot-badge">OUTAGE</span>
+                                     </div>`;
+                        });
+                    } else {
+                        html += `<div class="alert alert-success bg-opacity-25 bg-success text-white border-0"><i class="bi bi-check-circle me-2"></i> No Load Shedding</div>`;
+                    }
+                });
+            }
+            container.innerHTML = html;
+
+        } catch (e) {
+            container.innerHTML = `<div class="alert alert-danger">Failed to fetch schedule.</div>`;
+        }
+    }
+
+    setInterval(async () => {
+        try {
+            const response = await fetch('/api/stage');
+            const data = await response.json();
+            const stageSpan = document.getElementById("stageNumber");
+            const stageBadge = document.getElementById("stageBadge");
+
+            if (stageSpan.innerText != data.stage) {
+                stageSpan.innerText = data.stage;
+                stageBadge.className = "stage-badge shadow-lg " + (data.stage > 0 ? "stage-high" : "stage-0");
+
+                // If schedule is open, refresh it automatically to show new times
+                if (!document.getElementById("town").disabled) {
+                    getSchedule();
+                }
+            }
+        } catch(e) {}
+    }, 5000);
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

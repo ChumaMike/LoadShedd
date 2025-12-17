@@ -1,37 +1,45 @@
 package wethinkcode.schedule;
 
-import java.util.Optional;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.jupiter.api.*;
-import wethinkcode.loadshed.common.transfer.ScheduleDO;
+public class ScheduleServiceTest {
+    private static ScheduleService testSvc;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-public class ScheduleServiceTest
-{
-    private ScheduleService testSvc;
-
-    @BeforeEach
-    public void initTestScheduleFixture(){
-        testSvc = new ScheduleService();
+    @BeforeAll
+    public static void initTestScheduleFixture(){
+        // Start the service on a random port (0) or default to avoid conflicts
+        testSvc = new ScheduleService().initialise();
+        testSvc.start(0);
     }
 
-    @AfterEach
-    public void destroyTestFixture(){
-        testSvc = null;
-    }
-
-    @Test
-    public void testSchedule_someTown(){
-        final Optional<ScheduleDO> schedule = testSvc.getSchedule( "Eastern Cape", "Gqeberha", 4 );
-        assertThat( schedule.isPresent() );
-        assertEquals( 4, schedule.get().numberOfDays() );
+    @AfterAll
+    public static void destroyTestFixture(){
+        testSvc.stop();
     }
 
     @Test
-    public void testSchedule_nonexistentTown(){
-        final Optional<ScheduleDO> schedule = testSvc.getSchedule( "Mars", "Elonsburg", 2 );
-        assertThat( schedule.isEmpty() );
+    public void getSchedule_returns_schedule_for_valid_town() {
+        // FIXED: Now we expect the raw 'Schedule' object, not Optional<ScheduleDO>
+        ScheduleService.Schedule schedule = testSvc.getSchedule("Gauteng", "Benoni", 4);
+
+        assertNotNull(schedule, "Schedule should not be null for valid town");
+        assertFalse(schedule.days().isEmpty(), "Schedule should contain days");
+        assertEquals(4, schedule.days().size(), "Should generate 4 days of data");
+
+        // Check first day
+        ScheduleService.Day day = schedule.days().get(0);
+        assertNotNull(day.name());
+        assertFalse(day.slots().isEmpty(), "Stage 4 should have outage slots");
+    }
+
+    @Test
+    public void getSchedule_returns_null_for_unknown_province() {
+        // We simulate "Mars" as a 'Not Found' case in our Service logic
+        ScheduleService.Schedule schedule = testSvc.getSchedule("Mars", "Elonsburg", 4);
+
+        assertNull(schedule, "Should return null for unknown province (Mars)");
     }
 }

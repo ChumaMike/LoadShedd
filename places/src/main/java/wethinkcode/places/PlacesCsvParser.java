@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.LineNumberReader;
 import java.util.Objects;
 import java.util.Set;
+import java.util.HashSet;
+import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -16,22 +18,23 @@ import wethinkcode.places.model.Town;
 
 import static java.util.Objects.requireNonNull;
 
-/**
- * I parse the PlaceNamesZA CSV file.
- */
 public class PlacesCsvParser
 {
-    // Restored Constants required by Tests
+    // Common column mappings for PlaceNamesZA
+    // 0: Name, 1: Feature, 2: Province (Usually)
+    // If your CSV is different, we will rely on VALID_PROVINCES to filter garbage.
     static final int NAME_COLUMN = 0;
     static final int FEATURE_COLUMN = 1;
-    static final int PROVINCE_COLUMN = 7;
-    static final int MIN_COLUMNS = PROVINCE_COLUMN + 1; // Used by tests
-    static final int MAX_COLUMNS = 20;                  // Used by tests
+    static final int PROVINCE_COLUMN = 7; // Try 2 first. If it fails, try 3 or 4.
+
+    // A "Allow List" of the 9 real provinces
+    private static final Set<String> VALID_PROVINCES = Set.of(
+            "Eastern Cape", "Free State", "Gauteng", "KwaZulu-Natal",
+            "Limpopo", "Mpumalanga", "North West", "Northern Cape", "Western Cape"
+    );
 
     private static final Set<String> WANTED_FEATURES = Set.of(
-            "Urban Area".toLowerCase(),
-            "Town".toLowerCase(),
-            "Township".toLowerCase()
+            "urban area", "town", "township", "populated place"
     );
 
     public Places parseCsvSource( File csvFile ) throws IOException {
@@ -39,13 +42,12 @@ public class PlacesCsvParser
         if( ! (csvFile.exists() && csvFile.canRead() )){
             throw new FileNotFoundException( "Required CSV input file " + csvFile.getPath() + " not found." );
         }
-
         return parseCsvSource( new LineNumberReader( new FileReader( csvFile ) ) );
     }
 
     public Places parseCsvSource( LineNumberReader reader ) throws IOException {
         try( final LineNumberReader in = Objects.requireNonNull( reader )){
-            in.readLine();  // Skip header line
+            in.readLine();  // Skip header
             return parseDataLines( in );
         }
     }
@@ -55,6 +57,7 @@ public class PlacesCsvParser
         final Set<Town> allTowns = in.lines()
                 .map( this::splitLineIntoValues )
                 .filter( this::isLineAWantedFeature )
+                .filter( this::hasValidProvince ) // <--- NEW SMART CHECK
                 .map( this::asTown )
                 .collect( Collectors.toSet() );
         return new PlacesDb( allTowns );
@@ -62,23 +65,31 @@ public class PlacesCsvParser
 
     @VisibleForTesting
     boolean isLineAWantedFeature( String[] csvValue ){
-        // Safety: Ensure line has enough columns using the restored constant
-        if (csvValue.length < MIN_COLUMNS) return false;
-
+        if (csvValue.length <= PROVINCE_COLUMN) return false;
         String feature = csvValue[FEATURE_COLUMN].trim().toLowerCase();
         return WANTED_FEATURES.contains( feature );
     }
 
+    // --- NEW METHOD: Checks if the column actually contains a real province ---
+    private boolean hasValidProvince( String[] csvValue ){
+        if (csvValue.length <= PROVINCE_COLUMN) return false;
+
+        // Clean up the text (remove quotes, trim spaces)
+        String rawValue = csvValue[PROVINCE_COLUMN].trim().replace("\"", "");
+
+        // Check if this text is in our list of 9 provinces
+        return VALID_PROVINCES.contains(rawValue);
+    }
+
     @VisibleForTesting
     String[] splitLineIntoValues( String aCsvLine ){
-        // Manual split required for this specific dataset structure
         return aCsvLine.trim().split( "," );
     }
 
     @VisibleForTesting
     Town asTown( String[] values ){
-        String name = values[NAME_COLUMN].trim();
-        String province = values[PROVINCE_COLUMN].trim();
+        String name = values[NAME_COLUMN].trim().replace("\"", "");
+        String province = values[PROVINCE_COLUMN].trim().replace("\"", "");
         return new Town( name, province );
     }
 }

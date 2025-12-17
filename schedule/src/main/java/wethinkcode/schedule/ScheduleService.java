@@ -1,120 +1,107 @@
 package wethinkcode.schedule;
 
-import java.time.LocalTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
-import com.google.common.annotations.VisibleForTesting;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
-import wethinkcode.loadshed.common.transfer.DayDO;
-import wethinkcode.loadshed.common.transfer.ScheduleDO;
-import wethinkcode.loadshed.common.transfer.SlotDO;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
-/**
- * I provide a REST API providing the current loadshedding schedule for a given town (in a specific province) at a given
- * loadshedding stage.
- */
-public class ScheduleService
-{
-    public static final int DEFAULT_STAGE = 0; // no loadshedding. Ha!
-
+public class ScheduleService {
     public static final int DEFAULT_PORT = 7002;
 
-    public static final String MQ_TOPIC = "stage";
+    public static void main(String[] args) {
+        final ScheduleService svc = new ScheduleService().initialise();
+        svc.start(DEFAULT_PORT);
+    }
 
     private Javalin server;
 
-    private int servicePort;
-
-    public static void main( String[] args ){
-        final ScheduleService svc = new ScheduleService().initialise();
-        svc.start();
-    }
-
-    @VisibleForTesting
-    ScheduleService initialise(){
-        server = initHttpServer();
+    public ScheduleService initialise() {
+        server = Javalin.create();
+        server.get("/{province}/{town}/{stage}", this::handleGetSchedule);
         return this;
     }
 
-    public void start(){
-        start( DEFAULT_PORT );
-    }
-
-    @VisibleForTesting
-    void start( int networkPort ){
-        servicePort = networkPort;
-        run();
-    }
-
-    public void stop(){
-        server.stop();
-    }
-
-    public void run(){
-        server.start( servicePort );
-    }
-
-    private Javalin initHttpServer(){
-        return Javalin.create()
-            .get( "/{province}/{town}/{stage}", this::getSchedule )
-            .get( "/{province}/{town}", this::getDefaultSchedule );
-    }
-
-    private Context getSchedule( Context ctx ){
-        final String province = ctx.pathParam( "province" );
-        final String townName = ctx.pathParam( "town" );
-        final String stageStr = ctx.pathParam( "stage" );
-
-        if( province.isEmpty() || townName.isEmpty() || stageStr.isEmpty() ){
-            ctx.status( HttpStatus.BAD_REQUEST );
-            return ctx;
+    public void start(int port) {
+        if (server != null) {
+            server.start(port);
         }
-        final int stage = Integer.parseInt( stageStr );
-        if( stage < 0 || stage > 8 ){
-            return ctx.status( HttpStatus.BAD_REQUEST );
+    }
+
+    public void stop() {
+        if (server != null) {
+            server.stop();
+        }
+    }
+
+    private void handleGetSchedule(Context ctx) {
+        String province = ctx.pathParam("province");
+        String town = ctx.pathParam("town");
+
+        // FIXED: Catch non-integer stages
+        int stage;
+        try {
+            stage = Integer.parseInt(ctx.pathParam("stage"));
+        } catch (NumberFormatException e) {
+            ctx.status(HttpStatus.BAD_REQUEST);
+            return;
         }
 
-        final Optional<ScheduleDO> schedule = getSchedule( province, townName, stage );
+        // FIXED: Validate Stage Range (0-8)
+        if (stage < 0 || stage > 8) {
+            ctx.status(HttpStatus.BAD_REQUEST);
+            return;
+        }
 
-        ctx.status( schedule.isPresent()
-            ? HttpStatus.OK
-            : HttpStatus.NOT_FOUND );
-        return ctx.json( schedule.orElseGet( ScheduleService::emptySchedule ) );
+        Schedule schedule = getSchedule(province, town, stage);
+
+        if (schedule == null) {
+            ctx.status(HttpStatus.NOT_FOUND);
+        } else {
+            ctx.json(schedule);
+        }
     }
 
-    private Context getDefaultSchedule( Context ctx ){
-        throw new UnsupportedOperationException( "TODO" );
+    public Schedule getSchedule(String province, String town, int stage) {
+        if (province.equalsIgnoreCase("Mars")) {
+            return null;
+        }
+        return generateSchedule(town, stage);
     }
 
-    // There *must* be a better way than this...
-    Optional<ScheduleDO> getSchedule( String province, String town, int stage ){
-        return province.equalsIgnoreCase( "Mars" )
-            ? Optional.empty()
-            : Optional.of( mockSchedule() );
+    private Schedule generateSchedule(String town, int stage) {
+        List<Day> days = new ArrayList<>();
+        LocalDate date = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE, MMM dd");
+
+        long seed = town.hashCode();
+        Random random = new Random(seed);
+
+        for (int i = 0; i < 4; i++) {
+            String dayName = date.plusDays(i).format(formatter);
+            List<Slot> slots = new ArrayList<>();
+
+            if (stage > 0) {
+                int numberOfSlots = (stage <= 2) ? 1 : (stage <= 4) ? 2 : 3;
+                int startHour = random.nextInt(12) * 2;
+
+                for (int j = 0; j < numberOfSlots; j++) {
+                    int endHour = startHour + 2;
+                    if (endHour > 24) endHour -= 24;
+                    String time = String.format("%02d:00 - %02d:00", startHour, endHour);
+                    slots.add(new Slot(time, time));
+                    startHour = (startHour + 8) % 24;
+                }
+            }
+            days.add(new Day(dayName, slots));
+        }
+        return new Schedule(days);
     }
 
-    private static ScheduleDO mockSchedule(){
-        final List<SlotDO> slots = List.of(
-            new SlotDO( LocalTime.of( 2, 0 ), LocalTime.of( 4, 0 ) ),
-            new SlotDO( LocalTime.of( 10, 0 ), LocalTime.of( 12, 0 ) ),
-            new SlotDO( LocalTime.of( 18, 0 ), LocalTime.of( 20, 0 ) )
-        );
-        final List<DayDO> days = List.of(
-            new DayDO( slots ),
-            new DayDO( slots ),
-            new DayDO( slots ),
-            new DayDO( slots )
-        );
-        return new ScheduleDO( days );
-    }
-
-    private static ScheduleDO emptySchedule(){
-        final List<SlotDO> slots = Collections.emptyList();
-        final List<DayDO> days = Collections.emptyList();
-        return new ScheduleDO( days );
-    }
+    public record Slot(String start, String end) {}
+    public record Day(String name, List<Slot> slots) {}
+    public record Schedule(List<Day> days) {}
 }

@@ -44,12 +44,12 @@
     <remote-repository>
       <option name="id" value="common_lib" />
       <option name="name" value="Project library" />
-      <option name="url" value="file:////home/wtc/Music/Projs/LoadShedd/web/common" />
+      <option name="url" value="file:////home/wtc/Music/Projs/LoadShedd/stage/common" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="common_lib" />
       <option name="name" value="Project library" />
-      <option name="url" value="file:////home/wtc/Music/Projs/LoadShedd/stage/common" />
+      <option name="url" value="file:////home/wtc/Music/Projs/LoadShedd/web/common" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="common_lib" />

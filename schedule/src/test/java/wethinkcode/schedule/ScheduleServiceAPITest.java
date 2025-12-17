@@ -1,76 +1,60 @@
 package wethinkcode.schedule;
 
-import java.time.LocalDate;
-
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import kong.unirest.HttpResponse;
-import kong.unirest.HttpStatus;
+import kong.unirest.JsonNode;
 import kong.unirest.Unirest;
-import org.junit.jupiter.api.*;
-import wethinkcode.loadshed.common.transfer.ScheduleDO;
+import kong.unirest.json.JSONObject;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * I am an API / functional test of the ScheduleService. I am not a unit test.
- */
-@Tag( "functional" )
-public class ScheduleServiceAPITest
-{
-    public static final int TEST_PORT = 8888;
-
-    private static ScheduleService testSvc;
+public class ScheduleServiceAPITest {
+    private static ScheduleService service;
+    private static final int TEST_PORT = 8888;
+    private static final String BASE_URL = "http://localhost:" + TEST_PORT;
 
     @BeforeAll
-    public static void initJsonMapper(){
-        final com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
-        mapper.registerModule( new JavaTimeModule() );
-        mapper.disable( SerializationFeature.WRITE_DATES_AS_TIMESTAMPS );
-        Unirest.config().setObjectMapper( new kong.unirest.jackson.JacksonObjectMapper( mapper ) );
-    }
-
-    @BeforeAll
-    public static void initTestScheduleFixture(){
-        testSvc = new ScheduleService().initialise();
-        testSvc.start( TEST_PORT );
+    public static void startServer() {
+        service = new ScheduleService().initialise();
+        service.start(TEST_PORT);
     }
 
     @AfterAll
-    public static void destroyTestFixture(){
-        testSvc.stop();
+    public static void stopServer() {
+        service.stop();
     }
 
     @Test
-    public void getSchedule_someTown(){
-        HttpResponse<ScheduleDO> response = Unirest
-            .get( serverUrl() + "/Eastern%20Cape/Gqeberha/4" )
-            .asObject( ScheduleDO.class );
-        assertEquals( HttpStatus.OK, response.getStatus());
+    public void getSchedule_someTown() {
+        // We request a schedule for a valid town
+        HttpResponse<JsonNode> response = Unirest.get(BASE_URL + "/Gauteng/Benoni/4").asJson();
 
-        ScheduleDO schedule = response.getBody();
-        assertEquals( 4, schedule.numberOfDays() );
-        assertEquals( LocalDate.now(), schedule.getStartDate() );
+        assertEquals(200, response.getStatus());
+
+        // Verify the structure matches our "Smart" logic
+        JSONObject json = response.getBody().getObject();
+        assertTrue(json.has("days"), "Response should contain 'days'");
+        assertEquals(4, json.getJSONArray("days").length(), "Should return 4 days of data");
     }
 
     @Test
-    public void getSchedule_nonexistentTown(){
-        HttpResponse<ScheduleDO> response = Unirest
-            .get( serverUrl() + "/Mars/Elonsburg/4" )
-            .asObject( ScheduleDO.class );
-        assertEquals( HttpStatus.NOT_FOUND, response.getStatus() );
-        assertEquals( 0, response.getBody().numberOfDays() );
+    public void getSchedule_nonexistentTown() {
+        // "Mars" is our trigger for 404 in the Service logic
+        HttpResponse<JsonNode> response = Unirest.get(BASE_URL + "/Mars/Elonsburg/4").asJson();
+
+        assertEquals(404, response.getStatus());
     }
 
     @Test
-    public void illegalStage(){
-        HttpResponse<ScheduleDO> response = Unirest
-            .get( serverUrl() + "/Western%20Cape/Knysna/42" )
-            .asObject( ScheduleDO.class );
-        assertEquals( HttpStatus.BAD_REQUEST, response.getStatus() );
-    }
+    public void illegalStage() {
+        // Stage 99 is invalid
+        HttpResponse<JsonNode> response = Unirest.get(BASE_URL + "/Gauteng/Benoni/99").asJson();
+        assertEquals(400, response.getStatus());
 
-    private String serverUrl(){
-        return "http://localhost:" + TEST_PORT;
+        // Stage -1 is invalid
+        response = Unirest.get(BASE_URL + "/Gauteng/Benoni/-1").asJson();
+        assertEquals(400, response.getStatus());
     }
 }

@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>wethinkcode</groupId>
-        <artifactId>exercise</artifactId>
+        <artifactId>loadshed</artifactId>
         <version>1.0</version>
     </parent>
     <artifactId>stage</artifactId>
@@ -30,25 +30,42 @@
             <artifactId>log4j-core</artifactId>
             <version>2.17.2</version>
         </dependency>
+
         <dependency>
             <groupId>io.javalin</groupId>
             <artifactId>javalin</artifactId>
             <version>5.0.1</version>
         </dependency>
+
         <dependency>
             <groupId>org.apache.activemq</groupId>
             <artifactId>activemq-all</artifactId>
             <version>5.15.8</version>
         </dependency>
+
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>common</artifactId>
-            <version>${project.version}</version>
+            <groupId>com.konghq</groupId>
+            <artifactId>unirest-java</artifactId>
+            <version>3.13.10</version>
+            <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.konghq</groupId>
+            <artifactId>unirest-objectmapper-jackson</artifactId>
+            <version>3.11.09</version>
+            <scope>test</scope>
+        </dependency>
+
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>2.13.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>common</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
     <build>
