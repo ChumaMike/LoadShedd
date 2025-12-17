@@ -23,4 +23,8 @@ public class StageDO
         return stage;
     }
 
+    // Added setter so Jackson can deserialize JSON {"stage": X} into this object
+    public void setStage( int s ){
+        this.stage = s;
+    }
 }

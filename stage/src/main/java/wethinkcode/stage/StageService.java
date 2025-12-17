@@ -2,23 +2,11 @@ package wethinkcode.stage;
 
 import com.google.common.annotations.VisibleForTesting;
 import io.javalin.Javalin;
+import io.javalin.http.Context;
 
-/**
- * I provide a REST API that reports the current loadshedding "stage". I provide
- * two endpoints:
- * <dl>
- * <dt>GET /stage
- * <dd>report the current stage of loadshedding as a JSON serialisation
- *      of a {@code StageDO} data/transfer object
- * <dt>POST /stage
- * <dd>set a new loadshedding stage/level by POSTing a JSON-serialised {@code StageDO}
- *      instance as the body of the request.
- * </ul>
- */
 public class StageService
 {
     public static final int DEFAULT_STAGE = 0; // no loadshedding. Ha!
-
     public static final int DEFAULT_PORT = 7001;
 
     public static void main( String[] args ){
@@ -27,9 +15,7 @@ public class StageService
     }
 
     private int loadSheddingStage;
-
     private Javalin server;
-
     private int servicePort;
 
     @VisibleForTesting
@@ -40,7 +26,7 @@ public class StageService
     @VisibleForTesting
     StageService initialise( int initialStage ){
         loadSheddingStage = initialStage;
-        assert loadSheddingStage >= 0;
+        if (loadSheddingStage < 0) loadSheddingStage = 0; // Safety clamp
 
         server = initHttpServer();
         return this;
@@ -57,14 +43,41 @@ public class StageService
     }
 
     public void stop(){
-        server.stop();
+        if (server != null) {
+            server.stop();
+        }
     }
 
     public void run(){
-        server.start( servicePort );
+        if (server != null) {
+            server.start( servicePort );
+        }
     }
 
     private Javalin initHttpServer(){
-        throw new UnsupportedOperationException( "TODO" );
+        Javalin app = Javalin.create();
+
+        // 1. GET /stage
+        app.get("/stage", ctx -> {
+            ctx.json(new StageDO(this.loadSheddingStage));
+        });
+
+        // 2. POST /stage
+        app.post("/stage", ctx -> {
+            // Deserialize JSON body to StageDO
+            StageDO newStageData = ctx.bodyAsClass(StageDO.class);
+            int newStage = newStageData.getStage();
+
+            // Validate Range (0 to 8)
+            if (newStage >= 0 && newStage <= 8) {
+                this.loadSheddingStage = newStage;
+                ctx.status(200).json(new StageDO(this.loadSheddingStage));
+            } else {
+                // Invalid stage: Return 400 Bad Request
+                ctx.status(400).result("Invalid stage. Must be 0-8.");
+            }
+        });
+
+        return app;
     }
 }
