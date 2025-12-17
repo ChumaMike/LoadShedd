@@ -24,10 +24,22 @@ public class PlaceNameService implements Runnable {
     public static final String CFG_DATA_FILE = "data.file";
     public static final String CFG_SERVICE_PORT = "server.port";
 
-    public static void main( String[] args ){
+    public static void main( String[] args ) {
         final PlaceNameService svc = new PlaceNameService().initialise();
         final int exitCode = new CommandLine( svc ).execute( args );
-        System.exit( exitCode );
+
+        // If arguments were bad, exit immediately
+        if (exitCode != 0) {
+            System.exit( exitCode );
+        }
+
+        // IMPORTANT: Keep the main thread alive so Maven doesn't shut us down
+        try {
+            Thread.currentThread().join();
+        } catch (InterruptedException e) {
+            // Restore interrupted status
+            Thread.currentThread().interrupt();
+        }
     }
 
     @Option(names = { "-c", "--config" }, description = "Config file path")

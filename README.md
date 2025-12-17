@@ -21,13 +21,15 @@ Navigate to the project root and run:
 mvn clean install
 
 How to Run
-You can run the service using the Maven exec plugin or by running the generated JAR file.
+You can run the service using the Maven exec plugin
 
-Option 1: Via Maven:
-cd places
-mvn exec:java -Dexec.mainClass="wethinkcode.places.PlaceNameService"
+Start the Service: Run this command from your project root (LoadShedd). It tells Maven to run the app and pass the CSV file path.
 
-Option 2: Via JAR:
-java -jar places/target/places-1.0-SNAPSHOT.jar
+
+mvn -f places/pom.xml exec:java -Dexec.mainClass="wethinkcode.places.PlaceNameService" -Dexec.args="-f places/resources/PlaceNamesZA2008.csv"
+Test It (in a new terminal):
+
+You should see a JSON list of towns.
 
 Once the service is running, you can interact with it using curl or a browser.
+
