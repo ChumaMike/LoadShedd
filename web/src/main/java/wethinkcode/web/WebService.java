@@ -88,28 +88,33 @@ public class WebService
         engine.setTemplateResolver(resolver);
         JavalinThymeleaf.init(engine);
 
-        return Javalin.create(config -> config.staticFiles.add("/html", Location.CLASSPATH))
-                // 1. Main UI Page
+        return Javalin.create(config -> {
+                    // FIX: Point to the "static" folder where you put js/ and css/
+                    // Note: We use "static" (no slash) to be safer with Classpath loading
+                    config.staticFiles.add("static", Location.CLASSPATH);
+                })
                 .get("/", ctx -> {
                     ctx.render("index.html", Map.of("stage", currentStage, "provinces", getProvinces()));
                 })
-
-                // 2. API: Get Towns (Used by JS)
                 .get("/api/towns/{province}", ctx -> {
                     String province = ctx.pathParam("province");
-                    HttpResponse<JsonNode> response = Unirest.get(PLACES_SVC_URL + "/towns/" + province).asJson();
-                    ctx.contentType("application/json").result(response.getBody().toString());
-                })
+                    // Safety: Forward the request properly encoding the URL
+                    String url = PLACES_SVC_URL + "/towns/" + province.replace(" ", "%20");
+                    HttpResponse<JsonNode> response = Unirest.get(url).asJson();
 
-                // 3. API: Get Schedule (Used by JS)
+                    if(response.getStatus() == 200) {
+                        ctx.contentType("application/json").result(response.getBody().toString());
+                    } else {
+                        ctx.status(response.getStatus()).json(new JSONArray());
+                    }
+                })
                 .get("/api/schedule/{province}/{town}", ctx -> {
                     String province = ctx.pathParam("province");
                     String town = ctx.pathParam("town");
                     Object schedule = getSchedule(province, town, currentStage);
-                    ctx.json(schedule);
+                    if(schedule != null) ctx.json(schedule);
+                    else ctx.status(404);
                 })
-
-                // 4. API: Poll Stage (Used by JS for auto-update)
                 .get("/api/stage", ctx -> ctx.json(Map.of("stage", currentStage)));
     }
 

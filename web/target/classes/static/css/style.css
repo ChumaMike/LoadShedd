@@ -1,0 +1,170 @@
+/* --- GLOBAL THEME --- */
+:root {
+    --bg-dark: #121212;         /* Matte Black */
+    --bg-panel: #1e1e1e;        /* Dark Grey Panels */
+    --accent-orange: #ff9800;   /* Safety Orange */
+    --accent-teal: #009688;     /* Persian Green */
+    --text-main: #ffffff;
+    --text-muted: #b0b0b0;
+    --border: #333333;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    font-family: 'Segoe UI', Roboto, Helvetica, sans-serif;
+    padding-top: 70px; /* Space for fixed navbar */
+}
+
+/* --- NAVIGATION --- */
+.navbar {
+    background-color: rgba(0, 0, 0, 0.95) !important;
+    border-bottom: 3px solid var(--accent-orange);
+    padding: 15px 0;
+    backdrop-filter: blur(10px);
+}
+
+.navbar-brand {
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: #fff !important;
+    text-transform: uppercase;
+}
+
+.nav-link {
+    color: var(--text-muted) !important;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-left: 20px;
+    transition: color 0.3s;
+}
+
+.nav-link:hover, .nav-link.active {
+    color: var(--accent-orange) !important;
+}
+
+/* --- HERO SECTION (Home) --- */
+.hero-section {
+    padding: 80px 0;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    background: radial-gradient(circle at center, #1a1a1a 0%, #121212 70%);
+}
+
+.stage-badge-large {
+    font-size: 6rem;
+    font-weight: 900;
+    color: var(--accent-orange);
+    text-shadow: 0 0 40px rgba(255, 152, 0, 0.2);
+    line-height: 1;
+    margin: 20px 0;
+}
+
+.hero-subtitle {
+    color: var(--accent-teal);
+    letter-spacing: 3px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+/* --- TOOL SECTION (Cards) --- */
+.section-title {
+    border-left: 5px solid var(--accent-teal);
+    padding-left: 15px;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #fff;
+}
+
+.card {
+    background-color: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.card-header {
+    background-color: rgba(255,255,255,0.02);
+    border-bottom: 1px solid var(--border);
+    color: var(--accent-teal);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 15px 20px;
+}
+
+/* --- FORM ELEMENTS --- */
+.form-select, .form-control {
+    background-color: #5c5454;
+    border: 1px solid #444;
+    color: #fff;
+    padding: 12px;
+}
+
+.form-select:focus {
+    background-color: #333;
+    color: #fff;
+    border-color: var(--accent-orange);
+    box-shadow: none;
+}
+
+.btn-primary {
+    background-color: var(--accent-orange);
+    border: none;
+    color: #000;
+    font-weight: 800;
+    text-transform: uppercase;
+    padding: 12px;
+    width: 100%;
+}
+
+.btn-primary:hover {
+    background-color: #e68a00;
+    color: #000;
+}
+
+/* --- SCHEDULE LIST --- */
+.schedule-row {
+    background-color: #252525;
+    border-left: 4px solid var(--accent-orange);
+    padding: 15px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* --- TIME SLOT TEXT FIX --- */
+/* Target the text inside the schedule row */
+.schedule-row .fs-5 {
+    color: #ffffff !important;   /* Force Pure White */
+    font-weight: 700;            /* Make it Bold */
+    font-family: monospace;      /* Optional: Makes numbers look like a digital clock */
+    letter-spacing: 1px;         /* Adds a bit of breathing room */
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.2); /* Subtle glow */
+}
+
+/* Optional: Make the "Day Name" (e.g. Wednesday) stand out more too */
+.day-label {
+    font-size: 1.2rem;
+    color: var(--accent-teal) !important;
+    text-transform: uppercase;
+    margin-top: 25px;
+}
+
+/* --- FORM LABEL FIX --- */
+/* Target the small labels above the dropdowns */
+.card-body label {
+    color: #ffffff !important;  /* Force White */
+    opacity: 1;                 /* Remove transparency */
+    font-size: 0.85rem;         /* Optional: keep them small but crisp */
+    letter-spacing: 1.5px;      /* Optional: makes uppercase look better */
+}
+
+/* Optional: Ensure the text inside the dropdown is also bright white */
+.form-select {
+    color: #ffffff !important;
+    background-color: #2c2c2c; /* Ensure contrast remains */
+}

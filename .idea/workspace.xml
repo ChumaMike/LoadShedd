@@ -5,56 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="44e5bed5-4c62-4f84-82f5-079cef45792e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web/src/main/resources/static/css/style.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web/src/main/resources/static/js/app.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/common-1.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/common-1.0.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/maven-archiver/pom.properties" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/maven-archiver/pom.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/surefire-reports/TEST-wethinkcode.loadshed.common.util.ChecksTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/surefire-reports/TEST-wethinkcode.loadshed.common.util.ChecksTest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/surefire-reports/wethinkcode.loadshed.common.util.ChecksTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/surefire-reports/wethinkcode.loadshed.common.util.ChecksTest.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/places/src/main/java/wethinkcode/places/PlacesCsvParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/places/src/main/java/wethinkcode/places/PlacesCsvParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/places/target/classes/wethinkcode/places/PlacesCsvParser.class" beforeDir="false" afterPath="$PROJECT_DIR$/places/target/classes/wethinkcode/places/PlacesCsvParser.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/places/target/maven-archiver/pom.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/places/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/places/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/places/target/places-1.0.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/places/target/surefire-reports/TEST-wethinkcode.places.PlaceNameApiTest.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/places/target/surefire-reports/TEST-wethinkcode.places.PlaceNameConfigTest.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/places/target/surefire-reports/TEST-wethinkcode.places.PlaceNameServiceTest.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/places/target/surefire-reports/TEST-wethinkcode.places.PlacesCsvParserTest.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/places/target/surefire-reports/TEST-wethinkcode.places.db.memory.PlacesDbTest.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/places/target/surefire-reports/wethinkcode.places.PlaceNameApiTest.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/places/target/surefire-reports/wethinkcode.places.PlaceNameConfigTest.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/places/target/surefire-reports/wethinkcode.places.PlaceNameServiceTest.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/places/target/surefire-reports/wethinkcode.places.PlacesCsvParserTest.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/places/target/surefire-reports/wethinkcode.places.db.memory.PlacesDbTest.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/places/target/test-classes/wethinkcode/places/PlaceNameApiTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/places/target/test-classes/wethinkcode/places/PlaceNameConfigTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/places/target/test-classes/wethinkcode/places/PlaceNameServiceTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/places/target/test-classes/wethinkcode/places/PlacesCsvParserTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/places/target/test-classes/wethinkcode/places/PlacesTestData.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/places/target/test-classes/wethinkcode/places/db/memory/PlacesDbTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/schedule/src/main/java/wethinkcode/schedule/ScheduleService.java" beforeDir="false" afterPath="$PROJECT_DIR$/schedule/src/main/java/wethinkcode/schedule/ScheduleService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schedule/src/test/java/wethinkcode/schedule/ScheduleServiceAPITest.java" beforeDir="false" afterPath="$PROJECT_DIR$/schedule/src/test/java/wethinkcode/schedule/ScheduleServiceAPITest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schedule/src/test/java/wethinkcode/schedule/ScheduleServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/schedule/src/test/java/wethinkcode/schedule/ScheduleServiceTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schedule/target/classes/wethinkcode/schedule/ScheduleService.class" beforeDir="false" afterPath="$PROJECT_DIR$/schedule/target/classes/wethinkcode/schedule/ScheduleService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schedule/target/maven-archiver/pom.properties" beforeDir="false" afterPath="$PROJECT_DIR$/schedule/target/maven-archiver/pom.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schedule/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/schedule/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schedule/target/schedule-1.0-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/schedule/target/schedule-1.0-SNAPSHOT.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schedule/target/surefire-reports/TEST-wethinkcode.schedule.ScheduleServiceAPITest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/schedule/target/surefire-reports/TEST-wethinkcode.schedule.ScheduleServiceAPITest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schedule/target/surefire-reports/TEST-wethinkcode.schedule.ScheduleServiceTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/schedule/target/surefire-reports/TEST-wethinkcode.schedule.ScheduleServiceTest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schedule/target/surefire-reports/wethinkcode.schedule.ScheduleServiceAPITest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/schedule/target/surefire-reports/wethinkcode.schedule.ScheduleServiceAPITest.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schedule/target/surefire-reports/wethinkcode.schedule.ScheduleServiceTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/schedule/target/surefire-reports/wethinkcode.schedule.ScheduleServiceTest.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schedule/target/test-classes/wethinkcode/schedule/ScheduleServiceAPITest.class" beforeDir="false" afterPath="$PROJECT_DIR$/schedule/target/test-classes/wethinkcode/schedule/ScheduleServiceAPITest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schedule/target/test-classes/wethinkcode/schedule/ScheduleServiceTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/schedule/target/test-classes/wethinkcode/schedule/ScheduleServiceTest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stage/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/stage/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stage/src/main/java/wethinkcode/stage/StageService.java" beforeDir="false" afterPath="$PROJECT_DIR$/stage/src/main/java/wethinkcode/stage/StageService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stage/target/classes/wethinkcode/stage/StageService.class" beforeDir="false" afterPath="$PROJECT_DIR$/stage/target/classes/wethinkcode/stage/StageService.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/web/src/main/java/wethinkcode/web/WebService.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/java/wethinkcode/web/WebService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/web/src/main/resources/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/resources/templates/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/web/target/classes/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/web/target/classes/templates/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/web/target/classes/wethinkcode/web/WebService.class" beforeDir="false" afterPath="$PROJECT_DIR$/web/target/classes/wethinkcode/web/WebService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/target/maven-archiver/pom.properties" beforeDir="false" afterPath="$PROJECT_DIR$/web/target/maven-archiver/pom.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/target/web-1.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/web/target/web-1.0.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/target/maven-archiver/pom.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/target/web-1.0.jar" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -101,6 +60,11 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/web/src/main/resources/static" />
+    </key>
+  </component>
   <component name="RunManager" selected="Application.WebService">
     <configuration name="PlaceNameService" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="wethinkcode.places.PlaceNameService" />
@@ -168,9 +132,9 @@
     <recent_temporary>
       <list>
         <item itemvalue="Application.WebService" />
-        <item itemvalue="Application.PlaceNameService" />
         <item itemvalue="Application.StageService" />
         <item itemvalue="Application.ScheduleService" />
+        <item itemvalue="Application.PlaceNameService" />
       </list>
     </recent_temporary>
   </component>
