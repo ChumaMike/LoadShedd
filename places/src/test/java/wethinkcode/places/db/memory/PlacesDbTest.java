@@ -5,11 +5,11 @@ import java.util.Set;
 import org.junit.jupiter.api.*;
 import wethinkcode.places.model.Town;
 
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Uncomment the body of the test methods. They can't compile until you add appropriate code
- * to the PlacesDb class. Once you make them compile, the tests should fail at first. Now
- * make the tests green.
+ *
+ * @author Mike Morris <mikro2nd@gmail.com>
  */
 public class PlacesDbTest
 {
@@ -27,16 +27,16 @@ public class PlacesDbTest
 
     @Test
     public void testProvinces(){
-//        final PlacesDb db = new PlacesDb( TOWNS );
-//        assertThat( db.provinces().size() ).isEqualTo( 3 );
+        final PlacesDb db = new PlacesDb( TOWNS );
+        assertThat( db.provinces().size() ).isEqualTo( 3 );
     }
 
     @Test
     public void testTownsInProvince(){
-//        final PlacesDb db = new PlacesDb( TOWNS );
-//        assertThat( db.townsIn( "Gauteng" ).size() ).isEqualTo( 4 );
-//        assertThat( db.townsIn( "Eastern Cape" ).size() ).isEqualTo( 2 );
-//        assertThat( db.townsIn( "Western Cape" ).size() ).isEqualTo( 3 );
-//        assertThat( db.townsIn( "Northern Cape" ) ).isEmpty();
+        final PlacesDb db = new PlacesDb( TOWNS );
+        assertThat( db.townsIn( "Gauteng" ).size() ).isEqualTo( 4 );
+        assertThat( db.townsIn( "Eastern Cape" ).size() ).isEqualTo( 2 );
+        assertThat( db.townsIn( "Western Cape" ).size() ).isEqualTo( 3 );
+        assertThat( db.townsIn( "Northern Cape" ) ).isEmpty();
     }
 }
