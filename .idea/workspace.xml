@@ -4,7 +4,28 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="44e5bed5-4c62-4f84-82f5-079cef45792e" name="Changes" comment="" />
+    <list default="true" id="44e5bed5-4c62-4f84-82f5-079cef45792e" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/common-1.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/common-1.0.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/maven-archiver/pom.properties" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/maven-archiver/pom.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/surefire-reports/TEST-wethinkcode.loadshed.common.util.ChecksTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/surefire-reports/TEST-wethinkcode.loadshed.common.util.ChecksTest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/surefire-reports/wethinkcode.loadshed.common.util.ChecksTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/surefire-reports/wethinkcode.loadshed.common.util.ChecksTest.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schedule/target/maven-archiver/pom.properties" beforeDir="false" afterPath="$PROJECT_DIR$/schedule/target/maven-archiver/pom.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schedule/target/schedule-1.0-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/schedule/target/schedule-1.0-SNAPSHOT.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schedule/target/surefire-reports/TEST-wethinkcode.schedule.ScheduleServiceAPITest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/schedule/target/surefire-reports/TEST-wethinkcode.schedule.ScheduleServiceAPITest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schedule/target/surefire-reports/TEST-wethinkcode.schedule.ScheduleServiceTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/schedule/target/surefire-reports/TEST-wethinkcode.schedule.ScheduleServiceTest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schedule/target/surefire-reports/wethinkcode.schedule.ScheduleServiceAPITest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/schedule/target/surefire-reports/wethinkcode.schedule.ScheduleServiceAPITest.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schedule/target/surefire-reports/wethinkcode.schedule.ScheduleServiceTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/schedule/target/surefire-reports/wethinkcode.schedule.ScheduleServiceTest.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stage/target/maven-archiver/pom.properties" beforeDir="false" afterPath="$PROJECT_DIR$/stage/target/maven-archiver/pom.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stage/target/stage-1.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/stage/target/stage-1.0.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stage/target/surefire-reports/TEST-wethinkcode.stage.StageServiceAPITest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/stage/target/surefire-reports/TEST-wethinkcode.stage.StageServiceAPITest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stage/target/surefire-reports/TEST-wethinkcode.stage.StageServiceMQTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/stage/target/surefire-reports/TEST-wethinkcode.stage.StageServiceMQTest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stage/target/surefire-reports/wethinkcode.stage.StageServiceAPITest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/stage/target/surefire-reports/wethinkcode.stage.StageServiceAPITest.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stage/target/surefire-reports/wethinkcode.stage.StageServiceMQTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/stage/target/surefire-reports/wethinkcode.stage.StageServiceMQTest.txt" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -24,10 +45,15 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Application.PlaceNameService.executor": "Run",
+    "Application.ScheduleService.executor": "Run",
+    "Application.StageService.executor": "Run",
+    "Application.WebService.executor": "Run",
+    "Maven.exercise [-f,stage/pom.xml,exec:java].executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
     "git-widget-placeholder": "main",
     "junie.onboarding.icon.badge.shown": "true",
@@ -45,7 +71,7 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Application.StageService">
     <configuration name="PlaceNameService" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="wethinkcode.places.PlaceNameService" />
       <module name="places-1-ex" />
@@ -59,8 +85,50 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="ScheduleService" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="wethinkcode.schedule.ScheduleService" />
+      <module name="schedule" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="wethinkcode.schedule.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="StageService" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="wethinkcode.stage.StageService" />
+      <module name="stage" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="wethinkcode.stage.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="WebService" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="wethinkcode.web.WebService" />
+      <module name="web" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="wethinkcode.web.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.StageService" />
+        <item itemvalue="Application.WebService" />
+        <item itemvalue="Application.ScheduleService" />
         <item itemvalue="Application.PlaceNameService" />
       </list>
     </recent_temporary>
@@ -80,7 +148,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1765970141328</updated>
-      <workItem from="1765970147235" duration="2235000" />
+      <workItem from="1765970147235" duration="9262000" />
     </task>
     <servers />
   </component>

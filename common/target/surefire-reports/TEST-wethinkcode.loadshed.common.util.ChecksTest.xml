@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="wethinkcode.loadshed.common.util.ChecksTest" time="0.078" tests="3" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="wethinkcode.loadshed.common.util.ChecksTest" time="0.13" tests="3" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="21"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
@@ -12,7 +12,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="US"/>
     <property name="sun.boot.library.path" value="/usr/lib/jvm/java-21-openjdk-amd64/lib"/>
-    <property name="sun.java.command" value="/home/wtc/Music/Projs/LoadShedd/common/target/surefire/surefirebooter9958165138801906914.jar /home/wtc/Music/Projs/LoadShedd/common/target/surefire 2025-12-17T15-39-19_365-jvmRun1 surefire15479754994698171653tmp surefire_18103253692275004936tmp"/>
+    <property name="sun.java.command" value="/home/wtc/Music/Projs/LoadShedd/common/target/surefire/surefirebooter12141838858141709196.jar /home/wtc/Music/Projs/LoadShedd/common/target/surefire 2025-12-17T15-53-25_872-jvmRun1 surefire4254631858189456608tmp surefire_118099577180479817582tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="/home/wtc/Music/Projs/LoadShedd/common/target/test-classes:/home/wtc/Music/Projs/LoadShedd/common/target/classes:/home/wtc/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.13.3/jackson-annotations-2.13.3.jar:/home/wtc/.m2/repository/org/apache/activemq/activemq-all/5.17.2/activemq-all-5.17.2.jar:/home/wtc/.m2/repository/com/google/guava/guava/31.1-jre/guava-31.1-jre.jar:/home/wtc/.m2/repository/com/google/guava/failureaccess/1.0.1/failureaccess-1.0.1.jar:/home/wtc/.m2/repository/com/google/guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar:/home/wtc/.m2/repository/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar:/home/wtc/.m2/repository/org/checkerframework/checker-qual/3.12.0/checker-qual-3.12.0.jar:/home/wtc/.m2/repository/com/google/errorprone/error_prone_annotations/2.11.0/error_prone_annotations-2.11.0.jar:/home/wtc/.m2/repository/com/google/j2objc/j2objc-annotations/1.3/j2objc-annotations-1.3.jar:/home/wtc/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.4.0/junit-jupiter-engine-5.4.0.jar:/home/wtc/.m2/repository/org/apiguardian/apiguardian-api/1.0.0/apiguardian-api-1.0.0.jar:/home/wtc/.m2/repository/org/junit/platform/junit-platform-engine/1.4.0/junit-platform-engine-1.4.0.jar:/home/wtc/.m2/repository/org/opentest4j/opentest4j/1.1.1/opentest4j-1.1.1.jar:/home/wtc/.m2/repository/org/junit/platform/junit-platform-commons/1.4.0/junit-platform-commons-1.4.0.jar:/home/wtc/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.4.0/junit-jupiter-api-5.4.0.jar:/home/wtc/.m2/repository/org/assertj/assertj-core/3.23.1/assertj-core-3.23.1.jar:/home/wtc/.m2/repository/net/bytebuddy/byte-buddy/1.12.10/byte-buddy-1.12.10.jar:"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -27,7 +27,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
-    <property name="surefire.real.class.path" value="/home/wtc/Music/Projs/LoadShedd/common/target/surefire/surefirebooter9958165138801906914.jar"/>
+    <property name="surefire.real.class.path" value="/home/wtc/Music/Projs/LoadShedd/common/target/surefire/surefirebooter12141838858141709196.jar"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="21.0.8+9-Ubuntu-0ubuntu122.04.1"/>
     <property name="user.name" value="wtc"/>
@@ -53,7 +53,7 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="65.0"/>
   </properties>
-  <testcase name="checkNotEmpty_emptyStringThrows" classname="wethinkcode.loadshed.common.util.ChecksTest" time="0.029"/>
-  <testcase name="checkNotEmpty_nullStringThrows" classname="wethinkcode.loadshed.common.util.ChecksTest" time="0.003"/>
-  <testcase name="checkNotEmpty_nonEmptyStringIsOk" classname="wethinkcode.loadshed.common.util.ChecksTest" time="0.005"/>
+  <testcase name="checkNotEmpty_emptyStringThrows" classname="wethinkcode.loadshed.common.util.ChecksTest" time="0.072"/>
+  <testcase name="checkNotEmpty_nullStringThrows" classname="wethinkcode.loadshed.common.util.ChecksTest" time="0.008"/>
+  <testcase name="checkNotEmpty_nonEmptyStringIsOk" classname="wethinkcode.loadshed.common.util.ChecksTest" time="0.013"/>
 </testsuite>

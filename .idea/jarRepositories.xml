@@ -2,9 +2,9 @@
 <project version="4">
   <component name="RemoteRepositoriesConfiguration">
     <remote-repository>
-      <option name="id" value="maven_central" />
-      <option name="name" value="Maven Central" />
-      <option name="url" value="https://repo1.maven.apache.org/maven2/" />
+      <option name="id" value="common_lib" />
+      <option name="name" value="Project library" />
+      <option name="url" value="file:////home/wtc/Music/Projs/LoadShedd/common/common" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="central" />
@@ -14,7 +14,17 @@
     <remote-repository>
       <option name="id" value="maven_central" />
       <option name="name" value="Maven Central" />
+      <option name="url" value="https://repo1.maven.apache.org/maven2/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven_central" />
+      <option name="name" value="Maven Central" />
       <option name="url" value="https://repo.maven.apache.org/maven2/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="common_lib" />
+      <option name="name" value="Project library" />
+      <option name="url" value="file:////home/wtc/Music/Projs/LoadShedd/schedule/common" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="central" />
@@ -22,9 +32,29 @@
       <option name="url" value="https://repo1.maven.org/maven2" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="common_lib" />
+      <option name="name" value="Project library" />
+      <option name="url" value="file:////home/wtc/Music/Projs/LoadShedd/common" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="jboss.community" />
       <option name="name" value="JBoss Community repository" />
       <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="common_lib" />
+      <option name="name" value="Project library" />
+      <option name="url" value="file:////home/wtc/Music/Projs/LoadShedd/stage/common" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="common_lib" />
+      <option name="name" value="Project library" />
+      <option name="url" value="file:////home/wtc/Music/Projs/LoadShedd/web/common" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="common_lib" />
+      <option name="name" value="Project library" />
+      <option name="url" value="file:////home/wtc/Music/Projs/LoadShedd/places/common" />
     </remote-repository>
   </component>
 </project>
