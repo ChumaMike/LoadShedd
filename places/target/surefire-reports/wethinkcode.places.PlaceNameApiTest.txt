@@ -1,8 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: wethinkcode.places.PlaceNameApiTest
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.001 s <<< FAILURE! - in wethinkcode.places.PlaceNameApiTest
-wethinkcode.places.PlaceNameApiTest  Time elapsed: 0 s  <<< ERROR!
-java.lang.UnsupportedOperationException: TODO
-	at wethinkcode.places.PlaceNameApiTest.startServer(PlaceNameApiTest.java:25)
-
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.09 s - in wethinkcode.places.PlaceNameApiTest
