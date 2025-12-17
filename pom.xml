@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>wethinkcode</groupId>
-    <artifactId>exercise</artifactId>
+    <artifactId>loadshed</artifactId>
     <version>1.0</version>
     <packaging>pom</packaging>
     <modules>
@@ -10,12 +10,21 @@
         <module>stage</module>
         <module>schedule</module>
         <module>web</module>
+        <module>common</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
     </properties>
+    <repositories>
+        <repository>
+            <id>common_lib</id>
+            <name>Project library</name>
+            <layout>default</layout>
+            <url>file:///${project.basedir}/common</url>
+        </repository>
+    </repositories>
     <dependencies>
         <dependency>
             <groupId>com.google.guava</groupId>

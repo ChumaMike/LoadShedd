@@ -1,5 +1,6 @@
 package wethinkcode.places.model;
 
+
 import java.util.Collection;
 
 /**

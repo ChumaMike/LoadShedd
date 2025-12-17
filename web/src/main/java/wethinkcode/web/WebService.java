@@ -2,18 +2,28 @@ package wethinkcode.web;
 
 import com.google.common.annotations.VisibleForTesting;
 import io.javalin.Javalin;
+import wethinkcode.places.PlaceNameService;
+import wethinkcode.schedule.ScheduleService;
+import wethinkcode.stage.StageService;
 
 /**
  * I am the front-end web server for the LightSched project.
  * <p>
- * Remember that we're not terribly interested in the web front-end part of this
- * server, more in the way it communicates and interacts with the back-end
- * services.
+ * Remember that we're not terribly interested in the web front-end part of this server, more in the way it communicates
+ * and interacts with the back-end services.
  */
 public class WebService
 {
 
     public static final int DEFAULT_PORT = 80;
+
+    public static final String STAGE_SVC_URL = "http://localhost:" + StageService.DEFAULT_PORT;
+
+    public static final String PLACES_SVC_URL = "http://localhost:" + PlaceNameService.DEFAULT_PORT;
+
+    public static final String SCHEDULE_SVC_URL = "http://localhost:" + ScheduleService.DEFAULT_PORT;
+
+    private static final String PAGES_DIR = "/html";
 
     public static void main( String[] args ){
         final WebService svc = new WebService().initialise();
@@ -26,7 +36,7 @@ public class WebService
 
     @VisibleForTesting
     WebService initialise(){
-        // TODO: add http client and server configuration here
+        // FIXME: Initialise HTTP client, MQ machinery and server from here
         return this;
     }
 

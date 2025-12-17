@@ -7,19 +7,26 @@ import java.util.Optional;
 
 import com.google.common.annotations.VisibleForTesting;
 import io.javalin.Javalin;
-import wethinkcode.schedule.transfer.DayDO;
-import wethinkcode.schedule.transfer.ScheduleDO;
-import wethinkcode.schedule.transfer.SlotDO;
+import io.javalin.http.Context;
+import io.javalin.http.HttpStatus;
+import wethinkcode.loadshed.common.transfer.DayDO;
+import wethinkcode.loadshed.common.transfer.ScheduleDO;
+import wethinkcode.loadshed.common.transfer.SlotDO;
 
 /**
- * I provide a REST API providing the current loadshedding schedule.
+ * I provide a REST API providing the current loadshedding schedule for a given town (in a specific province) at a given
+ * loadshedding stage.
  */
 public class ScheduleService
 {
-    public static final int DEFAULT_STAGE = 0;
+    public static final int DEFAULT_STAGE = 0; // no loadshedding. Ha!
+
     public static final int DEFAULT_PORT = 7002;
 
+    public static final String MQ_TOPIC = "stage";
+
     private Javalin server;
+
     private int servicePort;
 
     public static void main( String[] args ){
@@ -44,75 +51,69 @@ public class ScheduleService
     }
 
     public void stop(){
-        if(server != null) server.stop();
+        server.stop();
     }
 
     public void run(){
-        if(server != null) server.start( servicePort );
+        server.start( servicePort );
     }
 
     private Javalin initHttpServer(){
-        Javalin app = Javalin.create();
-
-        // Updated Route to match Test: /{province}/{town}/{stage}
-        app.get("/{province}/{town}/{stage}", ctx -> {
-            String province = ctx.pathParam("province");
-            String town = ctx.pathParam("town");
-
-            // Safe parsing of integer
-            int stage;
-            try {
-                stage = Integer.parseInt(ctx.pathParam("stage"));
-            } catch (NumberFormatException e) {
-                ctx.status(400).result("Invalid stage number");
-                return;
-            }
-
-            // 1. Validation: Illegal Stage
-            if (stage < 0 || stage > 8) {
-                ctx.status(400).result("Stage must be between 0 and 8");
-                return;
-            }
-
-            // 2. Logic: Get Schedule
-            Optional<ScheduleDO> scheduleOpt = getSchedule(province, town, stage);
-
-            if (scheduleOpt.isPresent()) {
-                ctx.status(200).json(scheduleOpt.get());
-            } else {
-                // 3. Not Found: Return 404 AND an empty JSON object
-                // The test calls body.numberOfDays(), so body cannot be null.
-                ctx.status(404).json(emptySchedule());
-            }
-        });
-
-        return app;
+        return Javalin.create()
+            .get( "/{province}/{town}/{stage}", this::getSchedule )
+            .get( "/{province}/{town}", this::getDefaultSchedule );
     }
 
-    // Mock Logic
+    private Context getSchedule( Context ctx ){
+        final String province = ctx.pathParam( "province" );
+        final String townName = ctx.pathParam( "town" );
+        final String stageStr = ctx.pathParam( "stage" );
+
+        if( province.isEmpty() || townName.isEmpty() || stageStr.isEmpty() ){
+            ctx.status( HttpStatus.BAD_REQUEST );
+            return ctx;
+        }
+        final int stage = Integer.parseInt( stageStr );
+        if( stage < 0 || stage > 8 ){
+            return ctx.status( HttpStatus.BAD_REQUEST );
+        }
+
+        final Optional<ScheduleDO> schedule = getSchedule( province, townName, stage );
+
+        ctx.status( schedule.isPresent()
+            ? HttpStatus.OK
+            : HttpStatus.NOT_FOUND );
+        return ctx.json( schedule.orElseGet( ScheduleService::emptySchedule ) );
+    }
+
+    private Context getDefaultSchedule( Context ctx ){
+        throw new UnsupportedOperationException( "TODO" );
+    }
+
+    // There *must* be a better way than this...
     Optional<ScheduleDO> getSchedule( String province, String town, int stage ){
-        // Mocking logic: "Mars" returns empty (404 case)
         return province.equalsIgnoreCase( "Mars" )
-                ? Optional.empty()
-                : Optional.of( mockSchedule() );
+            ? Optional.empty()
+            : Optional.of( mockSchedule() );
     }
 
     private static ScheduleDO mockSchedule(){
         final List<SlotDO> slots = List.of(
-                new SlotDO( LocalTime.of( 2, 0 ), LocalTime.of( 4, 0 )),
-                new SlotDO( LocalTime.of( 10, 0 ), LocalTime.of( 12, 0 )),
-                new SlotDO( LocalTime.of( 18, 0 ), LocalTime.of( 20, 0 ))
+            new SlotDO( LocalTime.of( 2, 0 ), LocalTime.of( 4, 0 ) ),
+            new SlotDO( LocalTime.of( 10, 0 ), LocalTime.of( 12, 0 ) ),
+            new SlotDO( LocalTime.of( 18, 0 ), LocalTime.of( 20, 0 ) )
         );
         final List<DayDO> days = List.of(
-                new DayDO( slots ),
-                new DayDO( slots ),
-                new DayDO( slots ),
-                new DayDO( slots )
+            new DayDO( slots ),
+            new DayDO( slots ),
+            new DayDO( slots ),
+            new DayDO( slots )
         );
         return new ScheduleDO( days );
     }
 
     private static ScheduleDO emptySchedule(){
+        final List<SlotDO> slots = Collections.emptyList();
         final List<DayDO> days = Collections.emptyList();
         return new ScheduleDO( days );
     }

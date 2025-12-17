@@ -3,14 +3,14 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>wethinkcode</groupId>
-        <artifactId>exercise</artifactId>
+        <artifactId>loadshed</artifactId>
         <version>1.0</version>
     </parent>
     <artifactId>web</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
     <properties>
-        <exec.mainClass>wethinkcode.web.Web</exec.mainClass>
+        <exec.mainClass>wethinkcode.web.WebService</exec.mainClass>
     </properties>
     <dependencies>
         <dependency>
@@ -65,6 +65,11 @@
             <artifactId>schedule</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-all</artifactId>
+            <version>5.15.8</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -72,6 +77,22 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.22.2</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.4.1</version>
+                <configuration>
+
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
