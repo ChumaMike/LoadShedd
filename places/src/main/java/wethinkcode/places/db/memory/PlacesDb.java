@@ -1,6 +1,9 @@
 package wethinkcode.places.db.memory;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import wethinkcode.places.model.Places;
 import wethinkcode.places.model.Town;
@@ -13,18 +16,32 @@ import wethinkcode.places.model.Town;
  */
 public class PlacesDb implements Places
 {
+    private final Set<Town> towns = new HashSet<>();
+
     @Override
     public Collection<String> provinces(){
-        throw new UnsupportedOperationException( "Not supported yet." );
+        return towns.stream()
+                .map(Town::getProvince)
+                .distinct()
+                .sorted()
+                .collect(Collectors.toList());
     }
 
     @Override
     public Collection<Town> townsIn( String aProvince ){
-        throw new UnsupportedOperationException( "Not supported yet." );
+        return towns.stream()
+                .filter(town -> town.getProvince().equalsIgnoreCase(aProvince))
+                .sorted()
+                .collect(Collectors.toList());
     }
 
     @Override
     public int size(){
-        throw new UnsupportedOperationException( "Not supported yet." );
+        return towns.size();
+    }
+
+    // This method is not in the Interface but is required by the Parser to load data.
+    public void add( Town town ){
+        towns.add(town);
     }
 }
