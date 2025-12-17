@@ -44,3 +44,9 @@ The calculation engine for the Load Shedding system. It generates a 4-day outage
 
 ```bash
 mvn -f schedule/pom.xml exec:java -Dexec.mainClass="wethinkcode.schedule.ScheduleService"
+
+Test It (New Terminal) Open a second terminal to send requests.
+
+```bash
+curl -v http://localhost:7002/Gauteng/Benoni/4
+```
