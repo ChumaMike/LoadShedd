@@ -1,18 +1,28 @@
-# Web Service
+You need to run 4 separate terminals simultaneously. Each terminal will run one specific microservice.
 
-The user-facing web server for the Load Shedding system. It aggregates data from the backend services and renders HTML pages.
+Terminal 1: The Database (PlaceName Service)
 
-## Prerequisites
-* Java 17+
-* Maven 3.6+
-* Backend Services Running:
-    * PlaceName Service (Port 7000)
-    * Stage Service (Port 7001)
-    * Schedule Service (Port 7002)
+```bash
+mvn -f places/pom.xml exec:java -Dexec.mainClass="wethinkcode.places.PlaceNameService" -Dexec.args="-f places/resources/PlaceNamesZA2008.csv"
+```
 
-## How to Run
+Terminal 2: The Status (Stage Service)
+This service holds the current Load Shedding stage (0-8).
 
-1. **Ensure all backend services are running** in separate terminals.
-2. **Start the Web Service:**
-   ```bash
-   mvn -f web/pom.xml exec:java -Dexec.mainClass="wethinkcode.web.WebService"
+```bash
+mvn -f stage/pom.xml exec:java -Dexec.mainClass="wethinkcode.stage.StageService"
+```
+
+Terminal 3: The Brain (Schedule Service)
+This service calculates the outage times based on the stage and town.
+
+```bash
+mvn -f schedule/pom.xml exec:java -Dexec.mainClass="wethinkcode.schedule.ScheduleService"
+```
+
+Terminal 4: The Face (Web Service)
+This service talks to the other three and shows you the HTML page.
+
+```bash
+mvn -f mvn -f web/pom.xml exec:java -Dexec.mainClass="wethinkcode.web.WebService"web/pom.xml exec:java -Dexec.mainClass="wethinkcode.web.WebService"
+```

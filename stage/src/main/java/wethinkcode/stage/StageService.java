@@ -1,6 +1,5 @@
 package wethinkcode.stage;
 
-
 import com.google.common.annotations.VisibleForTesting;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
@@ -8,21 +7,12 @@ import io.javalin.http.HttpStatus;
 import wethinkcode.loadshed.common.transfer.StageDO;
 
 /**
- * I provide a REST API that reports the current loadshedding "stage". I provide two endpoints:
- * <dl>
- * <dt>GET /stage
- * <dd>report the current stage of loadshedding as a JSON serialisation of a {@code StageDO} data/transfer object
- * <dt>POST /stage
- * <dd>set a new loadshedding stage/level by POSTing a JSON-serialised {@code StageDO} instance as the body of the
- * request.
- * </ul>
+ * I provide a REST API that reports the current loadshedding "stage".
  */
 public class StageService
 {
     public static final int DEFAULT_STAGE = 0; // no loadshedding. Ha!
-
     public static final int DEFAULT_PORT = 7001;
-
     public static final String MQ_TOPIC_NAME = "stage";
 
     public static void main( String[] args ){
@@ -31,9 +21,7 @@ public class StageService
     }
 
     private int loadSheddingStage;
-
     private Javalin server;
-
     private int servicePort;
 
     @VisibleForTesting
@@ -44,7 +32,8 @@ public class StageService
     @VisibleForTesting
     StageService initialise( int initialStage ){
         loadSheddingStage = initialStage;
-        assert loadSheddingStage >= 0;
+        // Clamp to 0 if negative, though validation happens in setter too
+        if(loadSheddingStage < 0) loadSheddingStage = 0;
 
         server = initHttpServer();
         return this;
@@ -61,17 +50,17 @@ public class StageService
     }
 
     public void stop(){
-        server.stop();
+        if(server != null) server.stop();
     }
 
     public void run(){
-        server.start( servicePort );
+        if(server != null) server.start( servicePort );
     }
 
     private Javalin initHttpServer(){
         return Javalin.create()
-            .get( "/stage", this::getCurrentStage )
-            .post( "/stage", this::setNewStage );
+                .get( "/stage", this::getCurrentStage )
+                .post( "/stage", this::setNewStage );
     }
 
     private Context getCurrentStage( Context ctx ){
@@ -81,9 +70,11 @@ public class StageService
     private Context setNewStage( Context ctx ){
         final StageDO stageData = ctx.bodyAsClass( StageDO.class );
         final int newStage = stageData.getStage();
-        if( newStage >= 0 ){
+
+        // Simple validation
+        if( newStage >= 0 && newStage <= 8 ){
             loadSheddingStage = newStage;
-            broadcastStageChangeEvent( ctx );
+            broadcastStageChangeEvent( ctx ); // Now this won't crash!
             ctx.status( HttpStatus.OK );
         }else{
             ctx.status( HttpStatus.BAD_REQUEST );
@@ -92,7 +83,8 @@ public class StageService
     }
 
     private void broadcastStageChangeEvent( Context ctx ){
-        throw new UnsupportedOperationException( "TODO" );
+        // throw new UnsupportedOperationException( "TODO" );
+        // TODO: Iteration 4 task.
+        // We leave this empty for Iteration 3 so the API works without crashing.
     }
-
 }

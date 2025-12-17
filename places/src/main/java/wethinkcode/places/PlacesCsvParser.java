@@ -17,90 +17,68 @@ import wethinkcode.places.model.Town;
 import static java.util.Objects.requireNonNull;
 
 /**
- * PlacesCsvParser : I parse a CSV file with each line containing the fields (in order):
- * <code>Name, Feature_Description, pklid, Latitude, Longitude, Date, MapInfo, Province,
- * fklFeatureSubTypeID, Previous_Name, fklMagisterialDistrictID, ProvinceID, fklLanguageID,
- * fklDisteral, Local Municipality, Sound, District Municipality, fklLocalMunic, Comments, Meaning</code>.
- * <p>
- * For the PlaceNameService we're only really interested in the <code>Name</code>,
- * <code>Feature_Description</code> and <code>Province</code> fields.
- * <code>Feature_Description</code> allows us to distinguish towns and urban areas from
- * (e.g.) rivers, mountains, etc. since our PlaceNameService is only concerned with occupied places.
+ * I parse the PlaceNamesZA CSV file.
  */
 public class PlacesCsvParser
 {
-    public Places parseCsvSource( File csvFile ) throws FileNotFoundException, IOException {
-        //{snip/1}
+    // Restored Constants required by Tests
+    static final int NAME_COLUMN = 0;
+    static final int FEATURE_COLUMN = 1;
+    static final int PROVINCE_COLUMN = 7;
+    static final int MIN_COLUMNS = PROVINCE_COLUMN + 1; // Used by tests
+    static final int MAX_COLUMNS = 20;                  // Used by tests
+
+    private static final Set<String> WANTED_FEATURES = Set.of(
+            "Urban Area".toLowerCase(),
+            "Town".toLowerCase(),
+            "Township".toLowerCase()
+    );
+
+    public Places parseCsvSource( File csvFile ) throws IOException {
         requireNonNull( csvFile );
         if( ! (csvFile.exists() && csvFile.canRead() )){
             throw new FileNotFoundException( "Required CSV input file " + csvFile.getPath() + " not found." );
         }
 
-        return parseCsvSource( new LineNumberReader(
-            new FileReader( csvFile )
-        ));
-        //{/snip}
+        return parseCsvSource( new LineNumberReader( new FileReader( csvFile ) ) );
     }
 
-    //{snip/1}
     public Places parseCsvSource( LineNumberReader reader ) throws IOException {
         try( final LineNumberReader in = Objects.requireNonNull( reader )){
-            in.readLine();  // get rid of the header line
-            final Places db = parseDataLines( in );
-            in.getLineNumber();
-            return db;
+            in.readLine();  // Skip header line
+            return parseDataLines( in );
         }
     }
 
     @VisibleForTesting
     Places parseDataLines( final LineNumberReader in ){
         final Set<Town> allTowns = in.lines()
-            .map( this::splitLineIntoValues )
-            .filter(this::isLineAWantedFeature )
-            .map( this::asTown )
-            .collect( Collectors.toSet() );
+                .map( this::splitLineIntoValues )
+                .filter( this::isLineAWantedFeature )
+                .map( this::asTown )
+                .collect( Collectors.toSet() );
         return new PlacesDb( allTowns );
     }
 
-    // The following variables are only useful in the methods that follow them...
-
-    private static final Set<String> WANTED_FEATURES = Set.of(
-        "Urban Area".toLowerCase(),
-        "Town".toLowerCase(),
-        "Township".toLowerCase() );
-
-    static final int NAME_COLUMN = 0;
-    static final int FEATURE_COLUMN = 1;
-    static final int PROVINCE_COLUMN = 7;
-    static final int MIN_COLUMNS = PROVINCE_COLUMN + 1;
-    static final int MAX_COLUMNS = 20;
-
     @VisibleForTesting
     boolean isLineAWantedFeature( String[] csvValue ){
-        return WANTED_FEATURES.contains( csvValue[FEATURE_COLUMN].toLowerCase() );
+        // Safety: Ensure line has enough columns using the restored constant
+        if (csvValue.length < MIN_COLUMNS) return false;
+
+        String feature = csvValue[FEATURE_COLUMN].trim().toLowerCase();
+        return WANTED_FEATURES.contains( feature );
     }
 
     @VisibleForTesting
     String[] splitLineIntoValues( String aCsvLine ){
-
-        // There is a small potential problem with using String::split here:
-        // split() ignores empty values at the end of the input String rather than
-        // explicitly assigning null for those columns. This means we're never really
-        // sure how many columns (values) were actually in the input String. For the
-        // data we're currently dealing with, it doesn't matter -- the stuff we want
-        // is in the first few columns, but this could become a problem if the data
-        // format changes...
-        //
-        // The alternative to using split() would be to parse the input "by hand".
-        // That's tedious and error-prone.
-
-        final String[] v = aCsvLine.trim().split( "," );
-        return v;
+        // Manual split required for this specific dataset structure
+        return aCsvLine.trim().split( "," );
     }
 
     @VisibleForTesting
     Town asTown( String[] values ){
-        return new Town( values[NAME_COLUMN], values[PROVINCE_COLUMN]);
+        String name = values[NAME_COLUMN].trim();
+        String province = values[PROVINCE_COLUMN].trim();
+        return new Town( name, province );
     }
-    //{/snip}
 }
