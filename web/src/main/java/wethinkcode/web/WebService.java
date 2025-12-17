@@ -12,18 +12,24 @@ import kong.unirest.Unirest;
 import kong.unirest.json.JSONArray;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
+import wethinkcode.loadshed.common.mq.MQ; // Uses common MQ config
+
+import javax.jms.*;
+import org.apache.activemq.ActiveMQConnectionFactory;
 
 import java.util.List;
 import java.util.Map;
 
 public class WebService
 {
-    // Use port 7003 instead of 80 to avoid permission issues
     public static final int DEFAULT_PORT = 7003;
-
     public static final String STAGE_SVC_URL = "http://localhost:7001";
     public static final String PLACES_SVC_URL = "http://localhost:7000";
     public static final String SCHEDULE_SVC_URL = "http://localhost:7002";
+
+    // A local cache of the stage.
+    // We update this via MQ so we don't always have to ask the Stage Service via HTTP.
+    private static int currentStage = 0;
 
     public static void main( String[] args ){
         final WebService svc = new WebService().initialise();
@@ -35,6 +41,7 @@ public class WebService
 
     public WebService initialise(){
         configureHttpClient();
+        startStageListener(); // <--- START LISTENING TO MQ
         server = configureHttpServer();
         return this;
     }
@@ -60,12 +67,47 @@ public class WebService
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-
         Unirest.config().setObjectMapper(new kong.unirest.jackson.JacksonObjectMapper(mapper));
     }
 
+    // --- MQ LISTENER ---
+    private void startStageListener() {
+        new Thread(() -> {
+            try {
+                System.out.println("WEB: Connecting to MQ at " + MQ.URL);
+                ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory(MQ.URL);
+                Connection connection = factory.createConnection(MQ.USER, MQ.PASSWD);
+                connection.start();
+
+                Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+                Topic topic = session.createTopic("stage");
+                MessageConsumer consumer = session.createConsumer(topic);
+
+                consumer.setMessageListener(message -> {
+                    try {
+                        if (message instanceof TextMessage) {
+                            String json = ((TextMessage) message).getText();
+                            System.out.println("WEB: Received Stage Update! -> " + json);
+
+                            // Parse simple JSON to update local cache
+                            // Expected format: {"stage": 4}
+                            if (json.contains("\"stage\"")) {
+                                String num = json.replaceAll("[^0-9]", "");
+                                currentStage = Integer.parseInt(num);
+                                System.out.println("WEB: Cache updated to Stage " + currentStage);
+                            }
+                        }
+                    } catch (JMSException e) {
+                        e.printStackTrace();
+                    }
+                });
+            } catch (Exception e) {
+                System.err.println("WEB: Could not connect to MQ (Is the broker running?): " + e.getMessage());
+            }
+        }).start();
+    }
+
     private Javalin configureHttpServer(){
-        // 1. Setup Thymeleaf for HTML rendering
         TemplateEngine engine = new TemplateEngine();
         ClassLoaderTemplateResolver resolver = new ClassLoaderTemplateResolver();
         resolver.setPrefix("/templates/");
@@ -75,40 +117,36 @@ public class WebService
         JavalinThymeleaf.init(engine);
 
         Javalin app = Javalin.create(config -> {
-            config.staticFiles.add("/html", Location.CLASSPATH); // fallback for static assets
+            config.staticFiles.add("/html", Location.CLASSPATH);
         });
 
-        // 2. Define Routes
-
-        // Home Page: Load Stage and Provinces
+        // Routes
         app.get("/", ctx -> {
-            int stage = getStage();
+            // OPTIONAL: We can use our cached stage now, or still fetch fresh.
+            // Let's use the cache to prove MQ works!
             List<String> provinces = getProvinces();
 
             ctx.render("index.html", Map.of(
-                    "stage", stage,
+                    "stage", currentStage, // Uses the MQ-updated value
                     "provinces", provinces
             ));
         });
 
-        // API Proxy: Get Towns for a Province (called via AJAX/Fetch in browser)
         app.get("/towns/{province}", ctx -> {
             String province = ctx.pathParam("province");
             HttpResponse<JsonNode> response = Unirest.get(PLACES_SVC_URL + "/towns/" + province).asJson();
             ctx.contentType("application/json").result(response.getBody().toString());
         });
 
-        // Form Submit: Get Schedule
         app.post("/schedule", ctx -> {
             String province = ctx.formParam("province");
             String town = ctx.formParam("town");
-            int stage = getStage(); // Re-fetch current stage
 
-            Object scheduleData = getSchedule(province, town, stage);
+            Object scheduleData = getSchedule(province, town, currentStage);
             List<String> provinces = getProvinces();
 
             ctx.render("index.html", Map.of(
-                    "stage", stage,
+                    "stage", currentStage,
                     "provinces", provinces,
                     "selectedProvince", province,
                     "selectedTown", town,
@@ -119,49 +157,24 @@ public class WebService
         return app;
     }
 
-    // --- Helper Methods to talk to Backend Services ---
-
-    private int getStage() {
-        try {
-            HttpResponse<JsonNode> response = Unirest.get(STAGE_SVC_URL + "/stage").asJson();
-            if (response.getStatus() == 200) {
-                return response.getBody().getObject().getInt("stage");
-            }
-        } catch (Exception e) {
-            System.err.println("Failed to connect to Stage Service: " + e.getMessage());
-        }
-        return -1; // Error state
-    }
-
     private List<String> getProvinces() {
         try {
             HttpResponse<JsonNode> response = Unirest.get(PLACES_SVC_URL + "/provinces").asJson();
             if (response.getStatus() == 200) {
                 JSONArray arr = response.getBody().getArray();
-                // Convert JSONArray to List<String>
                 List<Object> list = arr.toList();
                 return list.stream().map(Object::toString).toList();
             }
-        } catch (Exception e) {
-            System.err.println("Failed to connect to Places Service: " + e.getMessage());
-        }
+        } catch (Exception e) { /* Ignore */ }
         return List.of();
     }
 
     private Object getSchedule(String province, String town, int stage) {
         try {
-            // URL: /province/town/stage
             String url = String.format("%s/%s/%s/%d", SCHEDULE_SVC_URL, province, town, stage);
             HttpResponse<JsonNode> response = Unirest.get(url).asJson();
-
-            if (response.getStatus() == 200) {
-                // Return the raw JSON object to be rendered by Thymeleaf (or parsed)
-                // For simplicity, we pass the Map representation of the JSON
-                return response.getBody().getObject().toMap();
-            }
-        } catch (Exception e) {
-            System.err.println("Failed to connect to Schedule Service: " + e.getMessage());
-        }
+            if (response.getStatus() == 200) return response.getBody().getObject().toMap();
+        } catch (Exception e) { /* Ignore */ }
         return null;
     }
 }
