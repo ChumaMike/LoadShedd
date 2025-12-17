@@ -5,13 +5,9 @@ import java.time.LocalTime;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * TODO: javadoc SlotDO
- */
 public class SlotDO
 {
     private LocalTime start;
-
     private LocalTime end;
 
     public SlotDO(){
@@ -19,8 +15,8 @@ public class SlotDO
 
     @JsonCreator
     public SlotDO(
-        @JsonProperty( value = "from" ) LocalTime from,
-        @JsonProperty( value = "to" ) LocalTime to ){
+            @JsonProperty( value = "start" ) LocalTime from,
+            @JsonProperty( value = "end" ) LocalTime to ){
         start = from;
         end = to;
     }
@@ -32,5 +28,4 @@ public class SlotDO
     public LocalTime getEnd(){
         return end;
     }
-
 }

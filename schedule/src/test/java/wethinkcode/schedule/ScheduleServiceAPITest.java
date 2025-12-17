@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * I am an API / functional test of the ScheduleService. I am not a unit test.
  */
 @Tag( "expensive" )
-@Disabled( "Enable this to test your ScheduleService. DO NOT MODIFY THIS FILE.")
+//@Disabled( "Enable this to test your ScheduleService. DO NOT MODIFY THIS FILE.")
 public class ScheduleServiceAPITest
 {
     public static final int TEST_PORT = 8888;

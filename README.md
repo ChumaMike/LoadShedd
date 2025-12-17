@@ -30,3 +30,17 @@ Change the Stage (to Stage 4):
 
 curl -v -X POST -d '{"stage": 4}' http://localhost:7001/stage
 ```
+
+
+# Schedule Service
+
+The calculation engine for the Load Shedding system. It generates a 4-day outage schedule for a given town.
+
+## Prerequisites
+* Java 17+
+* Maven 3.6+
+
+## How to Run
+
+```bash
+mvn -f schedule/pom.xml exec:java -Dexec.mainClass="wethinkcode.schedule.ScheduleService"
